@@ -21,8 +21,8 @@ import java.util.List;
 public class NhanVienController {
     @Autowired
     private NhanVienService nhanvienService;
-
-
+    @Autowired
+    private NhanVienService nhanVienService;
 
 
     @GetMapping
@@ -50,4 +50,28 @@ public class NhanVienController {
             return ResponseEntity.ok("Xóa thất bại");
         }
     }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getNhanVienById(@PathVariable("id") Long id) {
+        NhanVien nv = nhanVienService.findById(id);
+        if (nv != null) {
+            return ResponseEntity.ok(nv);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateNhanVien(@RequestBody NhanVienDTO request, @PathVariable("id") Long id) {
+        NhanVien updated = nhanVienService.update(id, request);
+        if (updated == null) {
+            return ResponseEntity.notFound().build(); // Không tìm thấy nhân viên để update
+        }
+        return ResponseEntity.ok(updated); // Thành công, trả về nhân viên đã update
+    }
+    @GetMapping("/loc")
+    public ResponseEntity<?> locTheoTenVaTuoi() {
+        return ResponseEntity.ok(nhanvienService.locNhanVien());
+    }
+
 }

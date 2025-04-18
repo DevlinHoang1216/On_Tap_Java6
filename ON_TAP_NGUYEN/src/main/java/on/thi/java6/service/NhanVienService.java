@@ -48,5 +48,21 @@ public class NhanVienService {
 
     }
 
+    public NhanVien findById(Long id) {
+        return nhanVienRepository.findById(id).orElse(null);
+    }
+
+    public NhanVien update(Long id, NhanVienDTO request) {
+        NhanVien nhanVien = nhanVienRepository.findById(id).orElse(null);
+        if (nhanVien == null) return null; // Nếu không tìm thấy thì trả null
+
+        request.dto(nhanVien); // Gán dữ liệu từ DTO vào entity cũ
+        return nhanVienRepository.save(nhanVien); // Lưu và trả về entity đã cập nhật
+    }
+
+    public List<NhanVienCustom> locNhanVien() {
+        return nhanVienRepository.findByTenContainsAndTuoiGreater("a", 18);
+    }
+
 
 }

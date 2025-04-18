@@ -22,4 +22,14 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Long> {
             countQuery = "select count(*) from nhan_vien nv join chuc_vu cv on nv.id_chuc_vu = cv.id"
             ,nativeQuery = true)
     Page<NhanVienCustom> findAllNhanVienCustom(Pageable pageable);
+
+
+    @Query(value = "SELECT nv.id, nv.ma_nhan_vien, nv.ho_ten, nv.gioi_tinh, nv.ngay_sinh, " +
+            "cv.ma_chuc_vu, cv.ten_chuc_vu " +
+            "FROM nhan_vien nv " +
+            "JOIN chuc_vu cv ON nv.id_chuc_vu = cv.id " +
+            "WHERE LOWER(nv.ho_ten) LIKE %:keyword% " +
+            "AND DATEDIFF(YEAR, nv.ngay_sinh, GETDATE()) >= :minAge",
+            nativeQuery = true)
+    List<NhanVienCustom> findByTenContainsAndTuoiGreater(String keyword, int minAge);
 }
